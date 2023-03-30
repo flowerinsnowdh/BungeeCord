@@ -509,7 +509,7 @@ public class InitialHandler extends PacketHandler implements PendingConnection
             }
         };
         thisState = State.FINISHING;
-        HttpClient.get( authURL, ch.getHandle().eventLoop(), handler );
+        HttpClient.getWithProxy( authURL, ch.getHandle().eventLoop(), handler );
     }
 
     private void finish()
