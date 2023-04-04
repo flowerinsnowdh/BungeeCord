@@ -33,9 +33,13 @@ public class HttpInitializerWithProxy extends ChannelInitializer<Channel>
             String socksProxyUserName = System.getProperty("socksProxyUserName");
             String socksProxyPassword = System.getProperty("socksProxyPassword");
             try {
-                ch.pipeline().addLast(new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, Integer.parseInt(socksProxyPort)),
-                        socksProxyUserName, socksProxyPassword
-                ));
+                if (socksProxyUserName != null && socksProxyPassword != null) {
+                    ch.pipeline().addLast(new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, Integer.parseInt(socksProxyPort)),
+                            socksProxyUserName, socksProxyPassword
+                    ));
+                } else {
+                    ch.pipeline().addLast(new Socks5ProxyHandler(new InetSocketAddress(socksProxyHost, Integer.parseInt(socksProxyPort))));
+                }
             } catch (NumberFormatException ignored) {
             }
         } else if (System.getProperty("http.proxyHost") != null) {
@@ -44,8 +48,12 @@ public class HttpInitializerWithProxy extends ChannelInitializer<Channel>
             String httpProxyUserName = System.getProperty("http.proxyUserName");
             String httpProxyPassword = System.getProperty("http.proxyPassword");
             try {
-                ch.pipeline().addLast(new HttpProxyHandler(new InetSocketAddress(httpProxyHost, Integer.parseInt(httpProxyPort)),
-                        httpProxyUserName, httpProxyPassword));
+                if (httpProxyUserName != null && httpProxyPassword != null) {
+                    ch.pipeline().addLast(new HttpProxyHandler(new InetSocketAddress(httpProxyHost, Integer.parseInt(httpProxyPort)),
+                            httpProxyUserName, httpProxyPassword));
+                } else {
+                    ch.pipeline().addLast(new HttpProxyHandler(new InetSocketAddress(httpProxyHost, Integer.parseInt(httpProxyPort))));
+                }
             } catch (NumberFormatException ignored) {
             }
         }
